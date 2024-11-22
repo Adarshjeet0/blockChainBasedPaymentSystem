@@ -25,10 +25,67 @@
             <label for="confirmPassword">Confirm Password:</label>
             <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
 
-            <button type="submit">Sign Up</button>
+            <button type="submit" id="submit" href="dashboard.html">Sign Up</button>
             <p>Already have an account? <a href="signin.html">Sign In</a></p>
         </form>
     </main>
+
+    <script>
+        const signUpFormEL = document.getElementById("signUpForm");
+        const usernameEL = document.getElementById("username");
+        const emailEL = document.getElementById("email");
+        const passwordEL = document.getElementById("password");
+        const confirmPasswordEL = document.getElementById("confirmPassword");
+    
+        signUpFormEL.addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            const username = usernameEL.value.trim();
+            const email = emailEL.value.trim();
+            const password = passwordEL.value.trim();
+            const confirmPassword = confirmPasswordEL.value.trim();
+    
+            // Prepare the payload to send
+            const payload = {
+                name: username,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            };
+    
+            try {
+                // Send data to the API
+                const response = await fetch('http://localhost:3000/api/user/signup', {
+                    method: 'POST', // HTTP method
+                    headers: {
+                        'Content-Type': 'application/json', // Specify JSON payload
+                    },
+                    body: JSON.stringify(payload) // Convert JS object to JSON
+                });
+    
+                // Check for success or failure
+                if (response.ok) {
+                    const data = await response.json(); // Parse the JSON response
+                    console.log('Success:', data); // Log or handle success
+                    alert('Sign-up successful!');
+                    window.location.href = 'signin.html';
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData); // Log or handle error response
+                    alert('Sign-up failed: ' + (errorData.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Network Error:', error); // Log or handle network errors
+                alert('An error occurred. Please try again.');
+            }
+            usernameEL.value = '';
+            emailEL.value = '';
+            passwordEL.value = '';
+            confirmPasswordEL.value = '';
+            
+        });
+    </script>
+    
 
 
     

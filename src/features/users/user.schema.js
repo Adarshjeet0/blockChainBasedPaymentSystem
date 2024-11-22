@@ -17,6 +17,7 @@ export const userSchema = new mongoose.Schema({
             message: "Please enter a valid email address"
         }
     },
+    amount: Number,
     password: {
         type: String,
         required: true,

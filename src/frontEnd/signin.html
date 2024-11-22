@@ -22,5 +22,49 @@
             <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
         </form>
     </main>
+
+    <script>
+        const signInFormEL = document.getElementById("signInForm");
+        const emailEL = document.getElementById("email");
+        const passwordEL = document.getElementById("password");
+
+        signInFormEL.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            email: emailEL.value,
+            password: passwordEL.value
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/user/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                console.log("This is if block");
+                const data = await response.json();
+                // console.log(await response.json());
+                // console.log('Token:', data); // Log the token
+                // Save token in localStorage
+                localStorage.setItem('token', data.token);
+                alert('Sign-in successful!');
+                // Redirect to a dashboard or another page
+                window.location.href = "dashboard.html";
+            } else {
+                console.log("Entered into the else");
+                const errorData = await response.json();
+                console.error('Error:', errorData);
+                alert(errorData.message || 'Sign-in failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Network Error:', error);
+            alert('A network error occurred. Please check your connection.');
+        }
+    });
+    </script>
 </body>
 </html>

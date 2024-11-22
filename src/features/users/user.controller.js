@@ -17,15 +17,19 @@ export default class UserController{
     async signUp(req, res){
         
         const {name, email, password} = req.body;
+        console.log(name);
+        console.log(email);
+        console.log(password);
         try {
             // const hashedPassword = await bcrypt.hash(password,12);
             // const user = new UserModel(name,email,hashedPassword);
-            const result = await this.userRepository.signUp(name,email,password);
+            const amount = 5000;
+            const result = await this.userRepository.signUp(name,email,password, amount);
             return res.status(201).send(result);
         } catch (error) {
             // console.log(error);
             res.send("User already exist");
-            throw new Error("Something went wrong with databases"); 
+            // throw new Error("Something went wrong with databases"); 
         }
          
     }
@@ -51,7 +55,7 @@ export default class UserController{
                           expiresIn: '1h',
                         }
                     );
-                    return res.status(200).send(token);
+                    return res.status(200).send({token});
                 }else{
                     return res.status(401).send("Incorrect email or password");
                 }
@@ -95,7 +99,11 @@ export default class UserController{
         }
     }
 
-    async getUserById(req, res){}
+    async getUserById(req, res){
+        const {userId} = req.params;
+        const user = await this.userRepository.getUserById(userId);
+        res.status(200).send(user);
+    }
 
     async getAllUser(req, res){}
     

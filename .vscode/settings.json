@@ -1,0 +1,11 @@
+{
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "typescript.validate.enable": true,
+    "javascript.validate.enable": true,
+    "files.exclude": {
+      "**/.git": true,
+      "**/node_modules": true
+    }
+  }
+  
