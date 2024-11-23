@@ -23,6 +23,7 @@ import http from 'http';
 import bodyParser from 'body-parser';
 import {userRouter} from './src/features/users/user.routes.js';
 import {transactionRouter} from './src/features/transaction/transaction.routes.js';
+import jwtAuth from './src/middlewares/jwt.middleware.js';
 // import cors from 'cors';
 
 const server = express();
@@ -30,6 +31,6 @@ const server = express();
 server.use(cors());
 server.use(bodyParser.json());
 server.use('/api/user',userRouter);
-server.use('/api/transaction', transactionRouter);
+server.use('/api/transaction',jwtAuth, transactionRouter);
 
 export default server;

@@ -101,8 +101,9 @@
         const failedEl = document.getElementById("failed");
         const successEl = document.getElementById("success");
     
+        const token = localStorage.getItem('token');
         const sendMoney = () => {
-            const token = localStorage.getItem('token');
+
             if (token) {
                 try {
                     const payload = jwt_decode(token);
@@ -116,7 +117,7 @@
                     fetch(`http://localhost:3000/api/transaction/send-money/${senderId}`, {
                         method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${token}`,
+                            'Authorization': `${token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(obj)
@@ -152,9 +153,12 @@
                 }
             } else {
                 alert('No token found. Redirecting to login...');
-                window.location.href = 'login.html'; // Redirect to login
+                window.location.href = 'signin.html'; // Redirect to login
             }
         };
+        if(!token){
+            window.location.href = 'signin.html';
+        }
     
         sendMoneyEl.addEventListener('submit', (e) => {
             e.preventDefault();

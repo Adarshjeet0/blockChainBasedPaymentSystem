@@ -1,5 +1,6 @@
 import express from 'express';
 import UserController from './user.controller.js';
+import jwtAuth from '../../middlewares/jwt.middleware.js';
 
 export const userRouter = express.Router();
 const userController = new UserController();
@@ -16,7 +17,7 @@ userRouter.get('/logout', (req, res, next)=>{
 // userRouter.get('/logout-all-devices', (req, res, next)=>{
 //     userController.logoutFromAllDevices(req, res, next);
 // });
-userRouter.get('/get-details/:userId', (req, res, next)=>{
+userRouter.get('/get-details/:userId',jwtAuth, (req, res, next)=>{
     userController.getUserById(req, res, next);
 });
 userRouter.get('/get-balance/:userId', (req, res, next)=>{

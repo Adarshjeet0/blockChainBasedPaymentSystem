@@ -29,6 +29,7 @@
                 <a href="send-money.html" class="action-btn">Send Money</a>
                 <a href="check-balance.html" class="action-btn">Check Balance</a>
                 <a href="history.html" class="action-btn">Transaction History</a>
+                <a href="" class="action-btn" id="logoutBtn">LogOut</a>
             </div>
         </section>
     </main>
@@ -36,6 +37,7 @@
     <script>
         const userInfo = document.getElementById('userInfo');
         const cardEl = document.getElementById('card');
+        const logoutBtnEl = document.getElementById("logoutBtn");
         
         const token = localStorage.getItem('token');
         if (token) {
@@ -46,7 +48,7 @@
                 console.log(userId);
                 fetch(`http://localhost:3000/api/user/get-details/${userId}`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     }
                 })
                 .then(response => {
@@ -70,8 +72,20 @@
                 console.error('Failed to decode token:', error);
             }
         } else {
+            const mainEl = document.getElementsByTagName("main")[0];
+            
+            mainEl.innerHTML = `<a href="signin.html" class="action-btn">Login to Access</a>`;
             console.log('No token found. Redirecting to login...');
         }
+
+        logoutBtnEl.addEventListener('click', (e)=>{
+            e.preventDefault();
+            console.log("clicked");
+            localStorage.removeItem('token');
+            window.location.href = 'signin.html';
+
+        })
+        
     </script>
 </body>
 </html>

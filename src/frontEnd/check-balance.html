@@ -13,7 +13,7 @@
     </header>
     <main>
         <p>Your Current Balance:</p>
-        <h2 id="balance">10.5 ETH</h2>
+        <h2 id="balance"></h2>
         <button id="refreshBalance" type="submit">Refresh Balance</button>
         <button onclick="window.location.href='dashboard.html'" class="back-button">Back to Dashboard</button>
     </main>
@@ -33,7 +33,7 @@
                 console.log(userId);
                 fetch(`http://localhost:3000/api/user/get-details/${userId}`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     }
                 })
                 .then(response => {
@@ -43,7 +43,7 @@
                     return response.json();
                 })
                     .then(data => {
-                        balanceEl.innerHTML = data.amount;
+                        balanceEl.innerHTML = `${data.amount}.00 Rs`;
                     })
                     .catch(error => console.error('Fetch error:', error));
             } catch (error) {
@@ -51,6 +51,7 @@
             }
         } else {
             console.log('No token found. Redirecting to login...');
+            window.location.href = 'signin.html';
         }
         }
         checkBalance();
