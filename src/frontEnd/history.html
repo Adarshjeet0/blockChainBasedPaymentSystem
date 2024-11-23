@@ -67,6 +67,13 @@
                             senderEl.innerHTML = transaction.senderId;
                             receiverEl.innerHTML = transaction.receiverId;
 
+                            if(userId === transaction.receiverId){
+                                trEl.style.backgroundColor = 'rgba(0, 255, 0, 0.2)'; // Green with 30% opacity
+
+                            }else{
+                                trEl.style.background = 'rgba(255, 0, 0, 0.3)'; // Red with 50% opacity
+
+                            }
                             trEl.appendChild(dateEl);
                             trEl.appendChild(transactionIdEl);
                             trEl.appendChild(amountEl);
@@ -81,7 +88,7 @@
                 })
                 .catch(error => {
                     console.error('Fetch error:', error);
-                    tbodyEl.innerHTML = '<tr><td colspan="5">Failed to fetch transactions.</td></tr>';
+                    tbodyEl.innerHTML = '<tr><td colspan="5">No transactions.</td></tr>';
                 });
             } catch (error) {
                 console.error('Failed to decode token:', error);
