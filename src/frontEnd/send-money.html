@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send Money</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
     <header>
@@ -19,10 +20,147 @@
 
             <label for="amount">Amount (Rs):</label>
             <input type="number" id="amount" step="0.01" placeholder="Enter Amount" required>
-
-            <button type="submit">Send</button>
+            <div id="failed" style="display: none; color: red;">
+                <!-- <p>Transaction successful</p> -->
+            </div>
+            <div id="success" style="display: none; color: green;"></div>
+            <button type="submit" id="submitBtn">Send</button>
         </form>
+        
         <button onclick="window.location.href='dashboard.html'" class="back-button">Back to Dashboard</button>
     </main>
+
+    <!-- <script>
+        const recipientAddressEl = document.getElementById("recipientAddress");
+        const amountEl = document.getElementById("amount");
+        const submitBtnEl = document.getElementById("submitBtn");
+        const sendMoneyEl = document.getElementById("sendMoneyForm");
+        const failedEl = document.getElementById("failed");
+        const successEl = document.getElementById("success");
+
+        const sendMoney = ()=>{
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const payload = jwt_decode(token);
+                    // console.log('Decoded Payload:', payload);
+                    const obj = {
+                        receiverId: recipientAddressEl.value,
+                        amount: amountEl.value || 0
+                    }
+                    // console.log(obj);
+                    const senderId = payload.userId;
+                    // console.log(senderId);
+                    fetch(`http://localhost:3000/api/transaction/send-money/${senderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                        .then(data => {
+                            if(data.success){
+                                successEl.innerHTML = `<p>Transaction successful</p>`;
+                                successEl.style.display = "block";
+                                failedEl.style.display = "none";
+                            }
+                            else{
+                                failedEl.innerHTML = `<p>Transaction failed</p>`;
+                                successEl.style.display = "none";
+                                failedEl.style.display = "block";
+                            }
+                        })
+                        .catch(error => console.error('Fetch error:', error));
+                } catch (error) {
+                    console.error('Failed to decode token:', error);
+                }
+            } else {
+                console.log('No token found. Redirecting to login...');
+            }
+        }
+        // sendMoney();
+        sendMoneyEl.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            console.log("clicked");
+            sendMoney()
+        })
+    </script> -->
+
+
+    <script>
+        const recipientAddressEl = document.getElementById("recipientAddress");
+        const amountEl = document.getElementById("amount");
+        const sendMoneyEl = document.getElementById("sendMoneyForm");
+        const failedEl = document.getElementById("failed");
+        const successEl = document.getElementById("success");
+    
+        const sendMoney = () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const payload = jwt_decode(token);
+                    const senderId = payload.userId;
+    
+                    const obj = {
+                        receiverId: recipientAddressEl.value,
+                        amount: parseFloat(amountEl.value) || 0
+                    };
+    
+                    fetch(`http://localhost:3000/api/transaction/send-money/${senderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            successEl.innerHTML = `<p>Transaction successful!</p>`;
+                            successEl.style.display = "block";
+                            failedEl.style.display = "none";
+                            sendMoneyEl.reset(); // Reset the form after success
+                        } else {
+                            failedEl.innerHTML = `<p>Transaction failed: ${data.message || 'Unknown error'}</p>`;
+                            failedEl.style.display = "block";
+                            successEl.style.display = "none";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        failedEl.innerHTML = `<p>Transaction failed: Unable to process request.</p>`;
+                        failedEl.style.display = "block";
+                        successEl.style.display = "none";
+                    });
+                } catch (error) {
+                    console.error('Failed to decode token:', error);
+                    alert('Invalid session. Redirecting to login...');
+                    window.location.href = 'login.html'; // Redirect to login
+                }
+            } else {
+                alert('No token found. Redirecting to login...');
+                window.location.href = 'login.html'; // Redirect to login
+            }
+        };
+    
+        sendMoneyEl.addEventListener('submit', (e) => {
+            e.preventDefault();
+            sendMoney();
+        });
+    </script>
+    
 </body>
 </html>

@@ -56,9 +56,10 @@
                 window.location.href = "dashboard.html";
             } else {
                 console.log("Entered into the else");
-                const errorData = await response.json();
-                console.error('Error:', errorData);
-                alert(errorData.message || 'Sign-in failed. Please try again.');
+                return alert("Incorrect Credentials");
+                // const errorData = await response.json();
+                // console.error('Error:', errorData);
+                // alert(errorData.message || 'Sign-in failed. Please try again.');
             }
         } catch (error) {
             console.error('Network Error:', error);

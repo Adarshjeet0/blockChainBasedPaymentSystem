@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Balance</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
     <header>
@@ -13,8 +14,51 @@
     <main>
         <p>Your Current Balance:</p>
         <h2 id="balance">10.5 ETH</h2>
-        <button id="refreshBalance">Refresh Balance</button>
+        <button id="refreshBalance" type="submit">Refresh Balance</button>
         <button onclick="window.location.href='dashboard.html'" class="back-button">Back to Dashboard</button>
     </main>
+
+    <script>
+        const balanceEl = document.getElementById("balance");
+        const refreshBalanceEl = document.getElementById("refreshBalance");
+        
+
+        const checkBalance = ()=>{
+            const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const payload = jwt_decode(token);
+                // console.log('Decoded Payload:', payload);
+                const userId = payload.userId;
+                console.log(userId);
+                fetch(`http://localhost:3000/api/user/get-details/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                    .then(data => {
+                        balanceEl.innerHTML = data.amount;
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            } catch (error) {
+                console.error('Failed to decode token:', error);
+            }
+        } else {
+            console.log('No token found. Redirecting to login...');
+        }
+        }
+        checkBalance();
+        refreshBalanceEl.addEventListener('click', (e)=>{
+            console.log("Clicked");
+            e.preventDefault()
+            checkBalance();
+        })
+    </script>
 </body>
 </html>

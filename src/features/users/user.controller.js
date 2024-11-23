@@ -68,6 +68,16 @@ export default class UserController{
 
     }
 
+    async getBalance(req, res){
+        try {
+            const {userId} = req.params;
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Error logging out");
+        }
+    }
+
     async logOut(req, res) {
         try {
             // Inform the client to delete the token

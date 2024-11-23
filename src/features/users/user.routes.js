@@ -19,6 +19,9 @@ userRouter.get('/logout', (req, res, next)=>{
 userRouter.get('/get-details/:userId', (req, res, next)=>{
     userController.getUserById(req, res, next);
 });
+userRouter.get('/get-balance/:userId', (req, res, next)=>{
+    userController.getBalance(req, res, next);
+});
 userRouter.get('/get-all-details', (req, res, next)=>{
     userController.getAllUser(req, res, next);
 });
